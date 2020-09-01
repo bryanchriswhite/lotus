@@ -38,6 +38,10 @@ func (a *PaychAPI) PaychGet(ctx context.Context, from, to address.Address, amt t
 	}, nil
 }
 
+func (a *PaychAPI) PaychAvailableFunds(from, to address.Address) (*api.ChannelAvailableFunds, error) {
+	return a.PaychMgr.AvailableFunds(from, to)
+}
+
 func (a *PaychAPI) PaychGetWaitReady(ctx context.Context, sentinel cid.Cid) (address.Address, error) {
 	return a.PaychMgr.GetPaychWaitReady(ctx, sentinel)
 }
@@ -129,6 +133,7 @@ func (a *PaychAPI) PaychVoucherAdd(ctx context.Context, ch address.Address, sv *
 // that will be used to create the voucher, so if previous vouchers exist, the
 // actual additional value of this voucher will only be the difference between
 // the two.
+// Returns nil if there are not enough funds to create the voucher.
 func (a *PaychAPI) PaychVoucherCreate(ctx context.Context, pch address.Address, amt types.BigInt, lane uint64) (*paych.SignedVoucher, error) {
 	return a.paychVoucherCreate(ctx, pch, paych.SignedVoucher{ChannelAddr: pch, Amount: amt, Lane: lane})
 }
@@ -160,6 +165,9 @@ func (a *PaychAPI) paychVoucherCreate(ctx context.Context, pch address.Address, 
 	sv.Signature = sig
 
 	if _, err := a.PaychMgr.AddVoucherOutbound(ctx, pch, sv, nil, types.NewInt(0)); err != nil {
+		if err == paychmgr.ErrInsufficientFunds {
+			return nil, nil
+		}
 		return nil, xerrors.Errorf("failed to persist voucher: %w", err)
 	}
 

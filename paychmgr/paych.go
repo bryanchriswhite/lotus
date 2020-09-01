@@ -21,11 +21,16 @@ import (
 	xerrors "golang.org/x/xerrors"
 )
 
+var ErrInsufficientFunds = fmt.Errorf("not enough funds in channel to cover voucher")
+
 // channelAccessor is used to simplify locking when accessing a channel
 type channelAccessor struct {
-	// waitCtx is used by processes that wait for things to be confirmed
-	// on chain
-	waitCtx       context.Context
+	from address.Address
+	to   address.Address
+
+	// chctx is used by background processes (eg when waiting for things to be
+	// confirmed on chain)
+	chctx         context.Context
 	sa            *stateAccessor
 	api           managerAPI
 	store         *Store
@@ -34,14 +39,16 @@ type channelAccessor struct {
 	msgListeners  msgListeners
 }
 
-func newChannelAccessor(pm *Manager) *channelAccessor {
+func newChannelAccessor(pm *Manager, from address.Address, to address.Address) *channelAccessor {
 	return &channelAccessor{
-		lk:           &channelLock{globalLock: &pm.lk},
+		from:         from,
+		to:           to,
+		chctx:        pm.ctx,
 		sa:           pm.sa,
 		api:          pm.pchapi,
 		store:        pm.store,
+		lk:           &channelLock{globalLock: &pm.lk},
 		msgListeners: newMsgListeners(),
-		waitCtx:      pm.ctx,
 	}
 }
 
@@ -133,7 +140,7 @@ func (ca *channelAccessor) checkVoucherValidUnlocked(ctx context.Context, ch add
 	// Must not exceed actor balance
 	newTotal := types.BigAdd(totalRedeemed, pchState.ToSend)
 	if act.Balance.LessThan(newTotal) {
-		return nil, fmt.Errorf("not enough funds in channel to cover voucher")
+		return nil, ErrInsufficientFunds
 	}
 
 	if len(sv.Merges) != 0 {
@@ -479,7 +486,7 @@ func (ca *channelAccessor) totalRedeemedWithVoucher(laneStates map[uint64]*paych
 	lane, ok := laneStates[sv.Lane]
 	if ok {
 		// If the voucher is for an existing lane, and the voucher nonce
-		// and is higher than the lane nonce
+		// is higher than the lane nonce
 		if sv.Nonce > lane.Nonce {
 			// Add the delta between the redeemed amount and the voucher
 			// amount to the total

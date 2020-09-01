@@ -138,6 +138,15 @@ func (pm *Manager) GetPaych(ctx context.Context, from, to address.Address, amt t
 	return chanAccessor.getPaych(ctx, from, to, amt)
 }
 
+func (pm *Manager) AvailableFunds(from address.Address, to address.Address) (*api.ChannelAvailableFunds, error) {
+	chanAccessor, err := pm.accessorByFromTo(from, to)
+	if err != nil {
+		return nil, err
+	}
+
+	return chanAccessor.availableFunds()
+}
+
 // GetPaychWaitReady waits until the create channel / add funds message with the
 // given message CID arrives.
 // The returned channel address can safely be used against the Manager methods.

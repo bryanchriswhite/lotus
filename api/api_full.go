@@ -418,6 +418,7 @@ type FullNode interface {
 
 	PaychGet(ctx context.Context, from, to address.Address, amt types.BigInt) (*ChannelInfo, error)
 	PaychGetWaitReady(context.Context, cid.Cid) (address.Address, error)
+	PaychAvailableFunds(from, to address.Address) (*ChannelAvailableFunds, error)
 	PaychList(context.Context) ([]address.Address, error)
 	PaychStatus(context.Context, address.Address) (*PaychStatus, error)
 	PaychSettle(context.Context, address.Address) (cid.Cid, error)
@@ -533,6 +534,23 @@ type PaychStatus struct {
 type ChannelInfo struct {
 	Channel      address.Address
 	WaitSentinel cid.Cid
+}
+
+type ChannelAvailableFunds struct {
+	Channel *address.Address
+	// ConfirmedAmt is the amount of funds that have been confirmed on-chain
+	// for the channel
+	ConfirmedAmt types.BigInt
+	// PendingAmt is the amount of funds that are pending confirmation on-chain
+	PendingAmt types.BigInt
+	// PendingWaitSentinel can be used with PaychGetWaitReady to wait for
+	// confirmation of pending funds
+	PendingWaitSentinel *cid.Cid
+	// QueuedAmt is the amount that is queued up behind a pending request
+	QueuedAmt types.BigInt
+	// VoucherRedeemedAmt is the amount that is redeemed by vouchers on-chain
+	// and in the local datastore
+	VoucherReedeemedAmt types.BigInt
 }
 
 type PaymentInfo struct {
