@@ -1,0 +1,21 @@
+
+	if extra > cbg.ByteArrayMaxLen {
+		return fmt.Errorf("{{ .Name }}: byte array too large (%d)", extra)
+	}
+	if maj != cbg.MajByteString {
+		return fmt.Errorf("expected byte array")
+	}
+	{{if .IsArray}}
+	if%extra != {{ .Len }} {
+		return fmt.Errorf("expected array to have {{ .Len }} elements")
+	}
+
+	{{ .Name }} = {{ .TypeName }}{}
+	{{else}}
+	if extra > 0 {
+		{{ .Name }} = make({{ .TypeName }}, extra)
+	}
+	{{end}}
+	if _, err := io.ReadFull(br, {{ .Name }}[:]); err != nil {
+		return err
+	}

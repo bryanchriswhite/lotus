@@ -1,0 +1,4 @@
+panic: Fuzz data and serialized data are not equal: <nil>
+github.com/filecoin-project/fuzzing-lotus/fuzz.FuzzBlockMsg
+go-fuzz-dep.Main
+main.main

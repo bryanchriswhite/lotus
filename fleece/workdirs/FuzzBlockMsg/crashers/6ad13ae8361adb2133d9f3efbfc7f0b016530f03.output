@@ -1,0 +1,24 @@
+panic: runtime error: index out of range [0] with length 0
+
+goroutine 1 [running]:
+github.com/filecoin-project/specs-actors/actors/crypto.(*Signature).UnmarshalCBOR(0xc00000e060, 0xe1f240, 0xc0001e9650, 0xe1f240, 0xc0001e9650)
+	/go/pkg/mod/github.com/filecoin-project/specs-actors@v0.9.3/actors/crypto/signature.go:83 +0x472
+github.com/filecoin-project/lotus/chain/types.(*BlockHeader).UnmarshalCBOR(0xc00030a380, 0xe1f240, 0xc0001e9650, 0xe1f240, 0xc0001e9650)
+	/go/pkg/mod/github.com/filecoin-project/lotus@v0.5.10/chain/types/cbor_gen.go:386 +0x1d9e
+github.com/filecoin-project/lotus/chain/types.(*BlockMsg).UnmarshalCBOR(0xc00007c040, 0xe1f240, 0xc0001e9650, 0xc0001a3e88, 0x48d8ee)
+	/go/pkg/mod/github.com/filecoin-project/lotus@v0.5.10/chain/types/cbor_gen.go:1325 +0xd8f
+github.com/filecoin-project/lotus/chain/types.DecodeBlockMsg(0x7fbaf8d58000, 0x71, 0x71, 0x1dbfbcac, 0x1dbfbcac00000000, 0x5f60bc76)
+	/go/pkg/mod/github.com/filecoin-project/lotus@v0.5.10/chain/types/blockmsg.go:17 +0xd6
+github.com/filecoin-project/fuzzing-lotus/fuzz.FuzzBlockMsg(0x7fbaf8d58000, 0x71, 0x71, 0x4)
+	/tmp/fuzzing/fuzz/fuzz.go:15 +0x59
+go-fuzz-dep.Main(0xc0001a3f60, 0x3, 0x3)
+	go-fuzz-dep/main.go:36 +0x1ad
+main.main()
+	github.com/filecoin-project/fuzzing-lotus/fuzz/go.fuzz.main/main.go:19 +0x72
+
+goroutine 19 [select]:
+github.com/ipfs/go-log/writer.(*MirrorWriter).logRoutine(0xc0001e8360)
+	/go/pkg/mod/github.com/ipfs/go-log@v1.0.4/writer/writer.go:71 +0x158
+created by github.com/ipfs/go-log/writer.NewMirrorWriter
+	/go/pkg/mod/github.com/ipfs/go-log@v1.0.4/writer/writer.go:36 +0xd1
+exit status 2

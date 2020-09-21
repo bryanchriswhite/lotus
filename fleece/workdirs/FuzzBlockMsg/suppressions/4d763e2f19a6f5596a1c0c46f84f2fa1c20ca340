@@ -1,0 +1,8 @@
+panic: runtime error: index out of range [0] with length 0
+github.com/filecoin-project/specs-actors/actors/crypto.(*Signature).UnmarshalCBOR
+github.com/filecoin-project/lotus/chain/types.(*BlockHeader).UnmarshalCBOR
+github.com/filecoin-project/lotus/chain/types.(*BlockMsg).UnmarshalCBOR
+github.com/filecoin-project/lotus/chain/types.DecodeBlockMsg
+github.com/filecoin-project/fuzzing-lotus/fuzz.FuzzBlockMsg
+go-fuzz-dep.Main
+main.main

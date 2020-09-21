@@ -1,0 +1,53 @@
+program hanged (timeout 10 seconds)
+
+SIGABRT: abort
+PC=0x47972a m=0 sigcode=0
+
+goroutine 1 [syscall]:
+syscall.Syscall6(0x9, 0x0, 0x210000, 0x3, 0x1, 0x3, 0x0, 0x0, 0x8, 0x240)
+	syscall/asm_linux_amd64.s:41 +0x5 fp=0xc00018bd10 sp=0xc00018bd08 pc=0x479705
+syscall.mmap(0x0, 0x210000, 0x3, 0x1, 0x3, 0x0, 0x413e18, 0xc0001d1620, 0xb92960)
+	syscall/zsyscall_linux_amd64.go:1627 +0x73 fp=0xc00018bd78 sp=0xc00018bd10 pc=0x479473
+syscall.(*mmapper).Mmap(0x12b0b20, 0x3, 0x0, 0x210000, 0x3, 0x1, 0x0, 0x0, 0x0, 0x0, ...)
+	syscall/syscall_unix.go:58 +0xbe fp=0xc00018be10 sp=0xc00018bd78 pc=0x475c7e
+syscall.Mmap(...)
+	syscall/syscall_linux.go:985
+go-fuzz-dep.setupCommFile(0xc00011a630, 0x50e2a110fbf4f33, 0x1, 0xc00018bee8, 0xb11fda)
+	go-fuzz-dep/sys_posix.go:18 +0x5e fp=0xc00018be98 sp=0xc00018be10 pc=0x48dd1e
+go-fuzz-dep.Main(0xc00018bf60, 0x3, 0x3)
+	go-fuzz-dep/main.go:20 +0x34 fp=0xc00018bf48 sp=0xc00018be98 pc=0x48d574
+main.main()
+	github.com/filecoin-project/fuzzing-lotus/fuzz/go.fuzz.main/main.go:19 +0x72 fp=0xc00018bf88 sp=0xc00018bf48 pc=0xb13972
+runtime.main()
+	runtime/proc.go:203 +0x1fa fp=0xc00018bfe0 sp=0xc00018bf88 pc=0x4372ea
+runtime.goexit()
+	runtime/asm_amd64.s:1373 +0x1 fp=0xc00018bfe8 sp=0xc00018bfe0 pc=0x464771
+
+goroutine 19 [select]:
+github.com/ipfs/go-log/writer.(*MirrorWriter).logRoutine(0xc0001d0360)
+	/go/pkg/mod/github.com/ipfs/go-log@v1.0.4/writer/writer.go:71 +0x158
+created by github.com/ipfs/go-log/writer.NewMirrorWriter
+	/go/pkg/mod/github.com/ipfs/go-log@v1.0.4/writer/writer.go:36 +0xd1
+
+rax    0x7f15fd7b9000
+rbx    0xc00002e800
+rcx    0x47972a
+rdx    0x3
+rdi    0x0
+rsi    0x210000
+rbp    0xc00018bd68
+rsp    0xc00018bd08
+r8     0x3
+r9     0x0
+r10    0x1
+r11    0x216
+r12    0x3
+r13    0xc00011a6b8
+r14    0x8
+r15    0xc000164c60
+rip    0x47972a
+rflags 0x216
+cs     0x33
+fs     0x0
+gs     0x0
+exit status 2

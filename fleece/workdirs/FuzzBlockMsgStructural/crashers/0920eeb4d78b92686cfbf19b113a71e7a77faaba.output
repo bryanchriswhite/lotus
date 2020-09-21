@@ -1,0 +1,40 @@
+program hanged (timeout 10 seconds)
+
+SIGABRT: abort
+PC=0x4662ed m=2 sigcode=0
+
+goroutine 0 [idle]:
+runtime.usleep(0x20f2400002710, 0x0, 0x44b48c, 0x271000000002, 0x7f78980279c8, 0x20f2465b9bb85, 0x20f2465b9bb85, 0x7fffffffffffffff, 0x7f78980279e0, 0x44b235, ...)
+	runtime/sys_linux_amd64.s:146 +0x3d
+runtime.sysmon()
+	runtime/proc.go:4479 +0x8d
+runtime.mstart1()
+	runtime/proc.go:1097 +0xc3
+runtime.mstart()
+	runtime/proc.go:1062 +0x6e
+
+goroutine 1 [running, locked to thread]:
+	goroutine running on other thread; stack unavailable
+
+rax    0xfffffffffffffffc
+rbx    0x4e20
+rcx    0x4662ed
+rdx    0x0
+rdi    0x7f7898027970
+rsi    0x0
+rbp    0x7f7898027980
+rsp    0x7f7898027970
+r8     0x9
+r9     0x0
+r10    0x7ffe2aeb3080
+r11    0x212
+r12    0xc000000900
+r13    0x23000
+r14    0x7f78bed4dd48
+r15    0x7f7898027af8
+rip    0x4662ed
+rflags 0x212
+cs     0x33
+fs     0x0
+gs     0x0
+exit status 2

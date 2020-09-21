@@ -1,0 +1,7 @@
+program hanged (timeout 10 seconds)
+
+SIGABRT: abort
+PC=0x4662ed m=2 sigcode=0
+
+goroutine 0 [idle]:
+signal: killed
